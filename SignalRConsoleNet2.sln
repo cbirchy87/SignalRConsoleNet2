@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31825.309
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRConsoleNet2", "SignalRConsoleNet2\SignalRConsoleNet2.csproj", "{40EF8C73-723D-4883-9890-AD15C332DE47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SN2UI", "SN2UI\SN2UI.csproj", "{BA40DF6A-A1BE-40DC-AAE7-101D0A80C306}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40EF8C73-723D-4883-9890-AD15C332DE47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40EF8C73-723D-4883-9890-AD15C332DE47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40EF8C73-723D-4883-9890-AD15C332DE47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40EF8C73-723D-4883-9890-AD15C332DE47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA40DF6A-A1BE-40DC-AAE7-101D0A80C306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA40DF6A-A1BE-40DC-AAE7-101D0A80C306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA40DF6A-A1BE-40DC-AAE7-101D0A80C306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA40DF6A-A1BE-40DC-AAE7-101D0A80C306}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {617FD3C8-5A14-46BA-87FD-C8BA672BF784}
+	EndGlobalSection
+EndGlobal
