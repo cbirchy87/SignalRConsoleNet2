@@ -155,6 +155,7 @@
             // 
             // tokenNumber_tb
             // 
+            this.tokenNumber_tb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tokenNumber_tb.Location = new System.Drawing.Point(6, 139);
             this.tokenNumber_tb.MaxLength = 8;
             this.tokenNumber_tb.Name = "tokenNumber_tb";
