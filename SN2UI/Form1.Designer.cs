@@ -58,6 +58,7 @@
             // 
             // connect_Sub
             // 
+            this.connect_Sub.Enabled = false;
             this.connect_Sub.Location = new System.Drawing.Point(314, 146);
             this.connect_Sub.Name = "connect_Sub";
             this.connect_Sub.Size = new System.Drawing.Size(87, 31);

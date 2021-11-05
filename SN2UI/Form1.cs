@@ -74,8 +74,18 @@ namespace SN2UI
         /// <param name="e"></param>
         private async void connect_Btn_Click(object sender, EventArgs e)
         {
-            await Connect();
+            try
+            {
+                await Connect();
+                connect_Sub.Enabled = true;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
+            
 
         /// <summary>
         /// Gets API Access token from API
