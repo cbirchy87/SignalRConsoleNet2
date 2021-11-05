@@ -142,7 +142,6 @@
             this.clientID_tb.Name = "clientID_tb";
             this.clientID_tb.Size = new System.Drawing.Size(320, 43);
             this.clientID_tb.TabIndex = 3;
-            this.clientID_tb.Text = "bd7073d188fb4d36818ea28a539a6488";
             // 
             // validTokens_lb
             // 

@@ -15,6 +15,13 @@ using System.Windows.Forms;
 
 namespace SN2UI
 {
+    // Net2 third party auth demo, using SignalR
+    // Chris Birch - Paxton Access
+    // Not production code.
+
+    //This is a demo of the logic for a third party application to handle the token and user auth. This would required a stable
+    //link to the Net2 Server. All commands are handled by the server. The access reader will flash red, before the access command is 
+    //sent. There is no way around this. 
     public partial class Form1 : Form
     {
             
@@ -22,6 +29,8 @@ namespace SN2UI
         private static readonly HttpClient client = new HttpClient();
         IHubProxy hubProxy;
         BindingList<int> ValidTokens = new BindingList<int>();
+        string apiToken;
+
         public Form1()
         {
 
@@ -29,30 +38,52 @@ namespace SN2UI
             
         }
 
+        /// <summary>
+        /// Load Form. Set simple listbox to store valid tokens. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private  void Form1_Load(object sender, EventArgs e)
         {
             validTokens_lb.DataSource = ValidTokens;
             validTokens_lb.DisplayMember = ValidTokens.ToString();
-
-
         }
 
-        public async Task Connected()
+       /// <summary>
+       /// SignalR connection logic
+       /// </summary>
+       /// <returns></returns>
+        public async Task Connect()
         {
+            //Get Api token from Auth endpoint.
             var apiKey = await getApiToken(username_tb.Text, password_tb.Text, clientID_tb.Text);
             dynamic resultApiTokenJson = JsonConvert.DeserializeObject<dynamic>(apiKey);
-            string apiToken = resultApiTokenJson.access_token;
+            //Create a string of the token data
+            apiToken = resultApiTokenJson.access_token;
 
+            //Connect to Hub with Auth
             connection = new HubConnection("http://localhost:8080/", "token=" + apiToken);
             hubProxy = connection.CreateHubProxy("eventHubLocal");
             await connection.Start();
     }
 
+        /// <summary>
+        /// Connect button action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void connect_Btn_Click(object sender, EventArgs e)
         {
-            await Connected();
+            await Connect();
         }
 
+        /// <summary>
+        /// Gets API Access token from API
+        /// </summary>
+        /// <param name="username">Net2 Username</param>
+        /// <param name="password">Net2 Password</param>
+        /// <param name="clientId">API Client ID</param>
+        /// <returns>string of auth response</returns>
         public static async Task<string> getApiToken(string username, string password, string clientId)
         {
             var client = new RestClient("http://localhost:8080/api/v1/authorization/tokens");
@@ -69,6 +100,11 @@ namespace SN2UI
 
         }
 
+        /// <summary>
+        /// Subcribe
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void connect_Sub_Click(object sender, EventArgs e)
         {
             hubProxy.Invoke("subscribeToLiveEvents");
@@ -83,13 +119,16 @@ namespace SN2UI
                 var token = t.ToString();
                 List<EventModel> eventModel = JsonConvert.DeserializeObject<List<EventModel>>(token);
 
-                if (CheckValid(eventModel[0].tokenNumber))
+            if (eventModel[0].eventSubType == 22)
                 {
-                    MessageBox.Show("This Token Is Valid");
-                    //OPENDOOR
-                    //SENDEVENT
+                    if (CheckValid(eventModel[0].tokenNumber))
+                    {
+                        //Send Open Door command to Net2 API
+                        OpenDoor(eventModel[0].deviceId.ToString());
+
+                        //TODO - Add handling for Logging. I would imagine this would be handled by the third party. 
+                    }
                 }
-                MessageBox.Show("Token Not Valid");
             });
         }
 
@@ -99,6 +138,29 @@ namespace SN2UI
             ValidTokens.Add(Int32.Parse(tokenNumber_tb.Text));
         }
 
+        /// <summary>
+        /// Send the command to Net2 to open the door.
+        /// </summary>
+        /// <param name="doorID">Door Serial Number</param>
+        private async void OpenDoor(string doorID)
+        {
+            var door = new OpenDoor { DoorId = doorID };
+            var client = new RestClient("http://localhost:8080//api/v1/commands/door/open");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Authorization", "bearer "+apiToken);
+            var body = JsonConvert.SerializeObject(door);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+            IRestResponse response = await client.ExecuteAsync(request);
+            Console.WriteLine(response.Content);
+        }
+
+        /// <summary>
+        /// Check that the token is valid. Check token number is present in auth list.
+        /// </summary>
+        /// <param name="tokenNumber"></param>
+        /// <returns>true if valid</returns>
         private bool CheckValid(int tokenNumber)
         {
 
